@@ -20,7 +20,7 @@ def getData():
         with open('log.txt', 'a') as logFile:
             logFile.write(out + '\n')
         with open('log.csv', 'a') as logFile:
-            logFile.write( dt.now().isoformat() + ',' + temperature + ',' + humidity + '\n' )
+            logFile.write( dt.now().isoformat() + ',' + str(temperature) + ',' + str(humidity) + '\n' )
     else:
         print('Failed to get reading. Try again!')
         # sys.exit(1)
