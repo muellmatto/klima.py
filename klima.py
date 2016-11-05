@@ -27,10 +27,10 @@ with open('log.csv') as csvFile:
         temperatureData.append(float(row[1]))
         humidityData.append(float(row[2]))
         dateData.append(row[0])
-        if len(temperatureData) > dataLen:
-            temperatureData.pop(0)
-            humidityData.pop(0)
-            dateData.pop(0)
+        #if len(temperatureData) > dataLen:
+        #    temperatureData.pop(0)
+        #    humidityData.pop(0)
+        #    dateData.pop(0)
 
 
 def updateChart(d,t,h):
