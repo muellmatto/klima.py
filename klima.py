@@ -79,7 +79,7 @@ def hello():
                 <h3>DOWNLOAD</h3>
                 <a href='/svg' download="messung.svg">Diagramm (SVG)</a><br>
                 <a href='/txt' download="messung.txt">Text-Datei</a><br>
-                <a href='/svg' download="messung.csv">CSV (Excel, etc.)</a><br>
+                <a href='/csv' download="messung.csv">CSV (Excel, etc.)</a><br>
             </body>
         </html>
     ''' % (out , lineChartRendered)

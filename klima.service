@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=/home/matto/Workspace/klima.py
-ExecStart=/usr/bin/gunicorn klima:app
+ExecStart=/usr/bin/gunicorn -b "0.0.0.0:80" klima:app
 
 [Install]
 WantedBy=multi-user.target
