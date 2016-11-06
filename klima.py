@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 import Adafruit_DHT
 from datetime import datetime as dt
 from flask import Flask
@@ -6,19 +6,22 @@ import threading
 import pygal
 import csv
 
+# print('imports done')
+
 app = Flask(__name__)
 
 out = 'no data yet'
 pin = 22
 
-dataLen = 50
-updateTimer = 60*30
+dataLen = 48
+updateTimer = 1800
 
 ## Read saved dara on startup
 temperatureData = []
 humidityData = []
 dateData = []
 
+# print('app, lists, variables set')
 
 
 with open('log.csv') as csvFile:
@@ -33,12 +36,18 @@ with open('log.csv') as csvFile:
         #    dateData.pop(0)
 
 
+# print('read csv into ram')
+
+
 def updateChart(d,t,h):
-    lineChart = pygal.Line(interpolate='cubic')
+    lineChart = pygal.Line(interpolate='lagrange', x_label_rotation=40)
+    #lineChart = pygal.Line(interpolate='hermite')
+    #lineChart = pygal.Line(interpolate='cubic')
+    #lineChart = pygal.Line()
     lineChart.title = 'Messungen'
-    lineChart.x_labels = dateData
-    lineChart.add('Temperatur', temperatureData)
-    lineChart.add('Luft', humidityData)
+    lineChart.x_labels = d
+    lineChart.add('Temperatur', t)
+    lineChart.add('Luft', h)
     return lineChart.render_data_uri()
 
 
@@ -49,9 +58,12 @@ def getData():
         temperatureData.append(temperature)
         humidityData.append(humidity)
         dateData.append(dt.now().isoformat())
-        lineChartRendered = updateChart(dateData[-dataLen:], temperatureData[-dataLen:], humidityData[-dataLen:])
+        # print('got DATA from sensor! at ' + dateData[-1])
+        temp = updateChart(list(map(lambda x: x[11:16], dateData[-dataLen:])), temperatureData[-dataLen:], humidityData[-dataLen:])
+        lineChartRendered = temp
+        # print('rendered svg')
         out = dt.now().isoformat() + ' - Temp={0:0.1f}*  Humidity={1:0.1f}%'.format(temperature, humidity)
-        print(out)
+        # print(out)
         with open('log.txt', 'a') as logFile:
             logFile.write(out + '\n')
         with open('log.csv', 'a') as logFile:
@@ -114,3 +126,4 @@ def getTXT():
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=80)
+    #app.run(host="0.0.0.0", port=80, debug=True)
