@@ -110,7 +110,14 @@ def getCSV():
 
 @app.route("/svg")
 def getSVG():
-    return updateChart(dateData, temperatureData, humidityData)
+    lineChart = pygal.Line(interpolate='hermite', interpolation_precision=16, x_label_rotation=40 )
+    #lineChart = pygal.Line(interpolate='cubic')
+    #lineChart = pygal.Line()
+    lineChart.title = 'Messungen'
+    lineChart.x_labels = d
+    lineChart.add('Temperatur', t)
+    lineChart.add('Luft', h)
+    return lineChart.render()
 
 
 
