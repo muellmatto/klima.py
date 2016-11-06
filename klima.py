@@ -6,22 +6,30 @@ import threading
 import pygal
 import csv
 
-# print('imports done')
+
+############################
+
+pin = 22
+
+dataLen = 96
+updateTimer = 900
+
+out = 'no data yet'
+
+############################
 
 app = Flask(__name__)
 
-out = 'no data yet'
-pin = 22
 
-dataLen = 48
-updateTimer = 1800
+# poweroff act-led
+with open('/sys/class/leds/led0/trigger', 'w') as led:
+    led.write('default-on')
 
-## Read saved dara on startup
+
+# Read saved data on startup
 temperatureData = []
 humidityData = []
 dateData = []
-
-# print('app, lists, variables set')
 
 
 with open('log.csv') as csvFile:
@@ -30,18 +38,10 @@ with open('log.csv') as csvFile:
         temperatureData.append(float(row[1]))
         humidityData.append(float(row[2]))
         dateData.append(row[0])
-        #if len(temperatureData) > dataLen:
-        #    temperatureData.pop(0)
-        #    humidityData.pop(0)
-        #    dateData.pop(0)
-
-
-# print('read csv into ram')
 
 
 def updateChart(d,t,h):
-    lineChart = pygal.Line(interpolate='lagrange', x_label_rotation=40)
-    #lineChart = pygal.Line(interpolate='hermite')
+    lineChart = pygal.Line(interpolate='hermite', interpolation_precision=16, x_label_rotation=40 )
     #lineChart = pygal.Line(interpolate='cubic')
     #lineChart = pygal.Line()
     lineChart.title = 'Messungen'
