@@ -41,7 +41,7 @@ with open('log.csv') as csvFile:
 
 
 def updateChart(d,t,h):
-    lineChart = pygal.Line(interpolate='hermite', interpolation_precision=16, x_label_rotation=40 )
+    lineChart = pygal.Line(interpolate='hermite', interpolation_precision=16, x_label_rotation=90 )
     #lineChart = pygal.Line(interpolate='cubic')
     #lineChart = pygal.Line()
     lineChart.title = 'Messungen'
@@ -59,7 +59,8 @@ def getData():
         humidityData.append(humidity)
         dateData.append(dt.now().isoformat())
         # print('got DATA from sensor! at ' + dateData[-1])
-        temp = updateChart(list(map(lambda x: x[11:16], dateData[-dataLen:])), temperatureData[-dataLen:], humidityData[-dataLen:])
+        # temp = updateChart(list(map(lambda x: x[11:16], dateData[-dataLen:])), temperatureData[-dataLen:], humidityData[-dataLen:])
+        temp = updateChart(dateData[-dataLen:] , temperatureData[-dataLen:], humidityData[-dataLen:])
         lineChartRendered = temp
         # print('rendered svg')
         out = dt.now().isoformat() + ' - Temp={0:0.1f}*  Humidity={1:0.1f}%'.format(temperature, humidity)
@@ -110,13 +111,13 @@ def getCSV():
 
 @app.route("/svg")
 def getSVG():
-    lineChart = pygal.Line(interpolate='hermite', interpolation_precision=16, x_label_rotation=40 )
+    lineChart = pygal.Line(interpolate='hermite', interpolation_precision=16, x_label_rotation=90 )
     #lineChart = pygal.Line(interpolate='cubic')
     #lineChart = pygal.Line()
     lineChart.title = 'Messungen'
-    lineChart.x_labels = d
-    lineChart.add('Temperatur', t)
-    lineChart.add('Luft', h)
+    lineChart.x_labels = dateData
+    lineChart.add('Temperatur', temperatureData)
+    lineChart.add('Luft', humidityData)
     return lineChart.render()
 
 
